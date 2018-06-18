@@ -65,3 +65,77 @@ Sort the points according to the slopes they makes with p.
 Check if any 3 (or more) adjacent points in the sorted order have equal slopes with respect to p. If so, these points, together with p, are collinear. 
 
 Applying this method for each of the n points in turn yields an efficient algorithm to the problem. The algorithm solves the problem because points that have equal slopes with respect to p are collinear, and sorting brings such points together. The algorithm is fast because the bottleneck operation is sorting. 
+![lines1](https://github.com/Sidney-L/Pattern-Recognition/raw/master/pic/lines1.png)
+ Write a program FastCollinearPoints.java that implements this algorithm.
+
+    public class FastCollinearPoints {
+       public FastCollinearPoints(Point[] points)     // finds all line segments containing 4 or more points
+       public           int numberOfSegments()        // the number of line segments
+       public LineSegment[] segments()                // the line segments
+    }
+
+The method segments() should include each maximal line segment containing 4 (or more) points exactly once. For example, if 5 points appear on a line segment in the order p→q→r→s→t, then do not include the subsegments p→s or q→t.
+
+Corner cases. Throw a java.lang.IllegalArgumentException if the argument to the constructor is null, if any point in the array is null, or if the argument to the constructor contains a repeated point.
+
+Performance requirement. The order of growth of the running time of your program should be n2 log n in the worst case and it should use space proportional to n plus the number of line segments returned. FastCollinearPoints should work properly even if the input has 5 or more collinear points.
+
+Sample client. This client program takes the name of an input file as a command-line argument; read the input file (in the format specified below); prints to standard output the line segments that your program discovers, one per line; and draws to standard draw the line segments.
+
+    public static void main(String[] args) {
+
+        // read the n points from a file
+        In in = new In(args[0]);
+        int n = in.readInt();
+        Point[] points = new Point[n];
+        for (int i = 0; i < n; i++) {
+            int x = in.readInt();
+            int y = in.readInt();
+            points[i] = new Point(x, y);
+        }
+
+        // draw the points
+        StdDraw.enableDoubleBuffering();
+        StdDraw.setXscale(0, 32768);
+        StdDraw.setYscale(0, 32768);
+        for (Point p : points) {
+            p.draw();
+        }
+        StdDraw.show();
+
+        // print and draw the line segments
+        FastCollinearPoints collinear = new FastCollinearPoints(points);
+        for (LineSegment segment : collinear.segments()) {
+            StdOut.println(segment);
+            segment.draw();
+        }
+        StdDraw.show();
+    }
+
+Input format. We supply several sample input files (suitable for use with the test client above) in the following format: An integer n, followed by n pairs of integers (x, y), each between 0 and 32,767. Below are two examples.
+
+    % more input6.txt       % more input8.txt
+    6                       8
+    19000  10000             10000      0
+    18000  10000                 0  10000
+    32000  10000              3000   7000
+    21000  10000              7000   3000
+     1234   5678             20000  21000
+    14000  10000              3000   4000
+                             14000  15000
+                              6000   7000
+
+    % java-algs4 BruteCollinearPoints input8.txt
+    (10000, 0) -> (0, 10000) 
+    (3000, 4000) -> (20000, 21000) 
+
+    % java-algs4 FastCollinearPoints input8.txt
+    (3000, 4000) -> (20000, 21000) 
+    (0, 10000) -> (10000, 0)
+
+    % java-algs4 FastCollinearPoints input6.txt
+    (14000, 10000) -> (32000, 10000) 
+
+Deliverables. Submit only the files BruteCollinearPoints.java, FastCollinearPoints.java, and Point.java. We will supply LineSegment.java and algs4.jar. You may not call any library functions other those in java.lang, java.util, and algs4.jar. You may use library functions in java.util only if they have already been introduced in the course. For example, you may use Arrays.sort(), but not java.util.HashSet.
+This assignment was developed by Kevin Wayne.
+Copyright © 2005. 
